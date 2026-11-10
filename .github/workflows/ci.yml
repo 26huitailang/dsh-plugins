@@ -26,8 +26,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      # The plugin's Host half only runs on macOS, but every source file is
-      # plain ESM/JS: syntax checking works on any OS.
+      # Both plugins are plain ESM/JS with no build step: syntax checking works
+      # on any OS, including the macOS-only Host halves.
       - name: Syntax check (node --check)
         run: |
           set -euo pipefail
@@ -36,6 +36,9 @@ jobs:
             disk-doctor/client.js
             disk-doctor/lib/*.js
             disk-doctor/tests/*.js
+            neon-5cms-theme/index.js
+            neon-5cms-theme/client.js
+            neon-5cms-theme/tests/*.js
             .tools/harness-host.mjs
           )
           for file in "${files[@]}"; do
@@ -43,11 +46,29 @@ jobs:
             echo "syntax ok: $file"
           done
 
-      # Offline fixture tests: no df/diskutil/osascript is invoked, so this
-      # runs on Linux runners.
-      - name: Unit tests (offline fixtures)
-        run: node disk-doctor/tests/collector.test.js
-
-      - name: Validate package manifest
+      # Offline tests: no df/diskutil/osascript and no browser/DOM is touched,
+      # so both suites run on Linux runners.
+      - name: Unit tests (offline fixtures and contracts)
         run: |
-          node -e "const fs = require('fs'); const p = JSON.parse(fs.readFileSync('disk-doctor/package.json', 'utf8')); if (p.name !== '@local/disk-doctor') throw new Error('unexpected package name: ' + p.name); if (!p.dsh || !p.dsh.bundle) throw new Error('missing dsh.bundle'); console.log('manifest ok:', p.name, p.version)"
+          node disk-doctor/tests/collector.test.js
+          node neon-5cms-theme/tests/contract.test.js
+
+      - name: Validate package manifests
+        run: |
+          node -e '
+            const fs = require("fs");
+            const expected = {
+              "disk-doctor": "@local/disk-doctor",
+              "neon-5cms-theme": "@local/neon-5cms-theme",
+            };
+            for (const [dir, name] of Object.entries(expected)) {
+              const manifest = JSON.parse(fs.readFileSync(dir + "/package.json", "utf8"));
+              if (manifest.name !== name) throw new Error("unexpected package name: " + manifest.name);
+              if (!manifest.dsh || !manifest.dsh.bundle) throw new Error("missing dsh.bundle in " + dir);
+              if (manifest.dsh.client && manifest.dsh.client.platform !== "web") throw new Error("unexpected client platform in " + dir);
+              for (const local of ["index.js", "cordis.patch.yml"]) {
+                if (!fs.existsSync(dir + "/" + local)) throw new Error("missing " + local + " in " + dir);
+              }
+              console.log("manifest ok:", manifest.name, manifest.version);
+            }
+          '
