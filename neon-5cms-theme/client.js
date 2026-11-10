@@ -26,7 +26,10 @@
  * Stable DOM contracts (never CSS-module hashes, which are re-hashed on every
  * official UI build):
  *   - `[data-composer-seat]`     the composer seat, ancestor of the send button
- *   - `button[aria-busy]`        the primary send button inside that seat
+ *   - `button[aria-busy]:not([aria-haspopup])`
+ *                                the primary send button inside that seat
+ *                                (the model selector also carries `aria-busy`,
+ *                                so `[aria-haspopup]` keeps it out)
  *   - `button[aria-busy] svg rect` its stop state (generation running)
  *   - `button[aria-busy] svg circle` its sending spinner state
  *   - `[data-composer-input]`    the composer's contenteditable (Enter to send)
@@ -209,11 +212,11 @@ window.__ModuleLoader__.load({
      */
     const STYLES = `
 body[data-anime-theme]{background-image:var(--dsw-anime-bg-glow,none);background-attachment:fixed}
-body[data-anime-theme] [data-composer-seat] button[aria-busy]{background:linear-gradient(135deg,#ffc9de 0%,#ff7eae 48%,#f94f8c 100%);box-shadow:0 3px 12px rgba(255,106,159,.4),0 0 0 3px rgba(255,255,255,.08);transition:background-color .1s,box-shadow .15s,transform .1s}
-body[data-anime-theme] [data-composer-seat] button[aria-busy]:hover:not(:disabled){background:linear-gradient(135deg,#ffd4e3 0%,#ff8fb8 48%,#ff5f96 100%);box-shadow:0 4px 16px rgba(255,106,159,.55),0 0 0 3px rgba(255,122,168,.25)}
-body[data-anime-theme] [data-composer-seat] button[aria-busy]:active:not(:disabled){transform:translateY(-2px) scale(.94)}
-body[data-anime-theme] [data-composer-seat] button[aria-busy]:not(:has(svg rect)):not(:has(svg circle)) svg{display:none}
-body[data-anime-theme] [data-composer-seat] button[aria-busy]:not(:has(svg rect)):not(:has(svg circle))::before{content:"";width:19px;height:19px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cg%20fill%3D%27%23fff7fa%27%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%2872%2012%2012%29%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%28144%2012%2012%29%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%28216%2012%2012%29%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%28288%2012%2012%29%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%272.4%27%20fill%3D%27%23ff9fc2%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/contain no-repeat;display:block}
+body[data-anime-theme] [data-composer-seat] button[aria-busy]:not([aria-haspopup]){background:linear-gradient(135deg,#ffc9de 0%,#ff7eae 48%,#f94f8c 100%);box-shadow:0 3px 12px rgba(255,106,159,.4),0 0 0 3px rgba(255,255,255,.08);transition:background-color .1s,box-shadow .15s,transform .1s}
+body[data-anime-theme] [data-composer-seat] button[aria-busy]:not([aria-haspopup]):hover:not(:disabled){background:linear-gradient(135deg,#ffd4e3 0%,#ff8fb8 48%,#ff5f96 100%);box-shadow:0 4px 16px rgba(255,106,159,.55),0 0 0 3px rgba(255,122,168,.25)}
+body[data-anime-theme] [data-composer-seat] button[aria-busy]:not([aria-haspopup]):active:not(:disabled){transform:translateY(-2px) scale(.94)}
+body[data-anime-theme] [data-composer-seat] button[aria-busy]:not([aria-haspopup]):not(:has(svg rect)):not(:has(svg circle)) svg{display:none}
+body[data-anime-theme] [data-composer-seat] button[aria-busy]:not([aria-haspopup]):not(:has(svg rect)):not(:has(svg circle))::before{content:"";width:19px;height:19px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%3E%3Cg%20fill%3D%27%23fff7fa%27%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%2872%2012%2012%29%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%28144%2012%2012%29%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%28216%2012%2012%29%27%2F%3E%3Cellipse%20cx%3D%2712%27%20cy%3D%276%27%20rx%3D%273.6%27%20ry%3D%274.8%27%20transform%3D%27rotate%28288%2012%2012%29%27%2F%3E%3Ccircle%20cx%3D%2712%27%20cy%3D%2712%27%20r%3D%272.4%27%20fill%3D%27%23ff9fc2%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center/contain no-repeat;display:block}
 `;
 
     /** 9×11 pixel petal: V-shaped split tips narrowing into the base. */
@@ -689,7 +692,7 @@ body[data-anime-theme] [data-composer-seat] button[aria-busy]:not(:has(svg rect)
       const onDocumentClick = (event) => {
         const target = event.target;
         if (!(target instanceof Element)) return;
-        const button = target.closest('[data-composer-seat] button[aria-busy]');
+        const button = target.closest('[data-composer-seat] button[aria-busy]:not([aria-haspopup])');
         if (button === null || button.querySelector('svg rect') !== null) return;
         start();
       };

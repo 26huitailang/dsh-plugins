@@ -59,8 +59,9 @@ CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）�
   与旧版「改写官方 theme bundle」的补丁脚本不同，DSH 升级后无需重跑脚本。
 - **真正的开关**：侧栏「插件」页中该 bundle / 行的开关即启用或关闭。关闭后插件注册的主题随即
   注销，样式表与樱花雨一并移除，Host 持久化的浅色 / 深色 / 跟随系统偏好重新生效。
-- **稳定 DOM 契约**：樱花按钮与樱花雨使用 `[data-composer-seat] button[aria-busy]`、
-  `[data-composer-input]` 等语义属性定位，不用每次构建都会变化的 CSS Module 哈希类名。
+- **稳定 DOM 契约**：樱花按钮与樱花雨使用 `[data-composer-seat] button[aria-busy]:not([aria-haspopup])`、
+  `[data-composer-input]` 等语义属性定位（`aria-busy` 也出现在模型选择器上，用 `aria-haspopup` 排除），
+  不用每次构建都会变化的 CSS Module 哈希类名。
 
 安装：通过 DSH Plugin Manager 以本地目录安装 `neon-5cms-theme/`。
 契约、开关行为与已知限制见 [`neon-5cms-theme/README.md`](neon-5cms-theme/README.md)。

@@ -288,7 +288,7 @@ test('switching the bundle off restores the previous preference and unregisters'
 // ---------------------------------------------------------------------------
 
 test('the sakura button targets stable composer attributes, not hash classes', () => {
-  assert.match(CLIENT_SOURCE, /\[data-composer-seat\] button\[aria-busy\]/)
+  assert.match(CLIENT_SOURCE, /\[data-composer-seat\] button\[aria-busy\]:not\(\[aria-haspopup\]\)/)
   assert.match(CLIENT_SOURCE, /:not\(:has\(svg rect\)\):not\(:has\(svg circle\)\)/)
   assert.doesNotMatch(CLIENT_SOURCE, /\.[A-Za-z0-9_-]{6}_primary/, 'old CSS-module hash must not come back')
   assert.doesNotMatch(CLIENT_SOURCE, /uV2eYG_/, 'old CSS-module hash must not come back')
@@ -307,7 +307,7 @@ test('every plugin-owned style rule is gated on the active-theme attribute', () 
 
 test('the petal rain listens to the composer input and the primary button', () => {
   assert.match(CLIENT_SOURCE, /\[data-composer-input\]/)
-  assert.match(CLIENT_SOURCE, /closest\('\[data-composer-seat\] button\[aria-busy\]'\)/)
+  assert.match(CLIENT_SOURCE, /closest\('\[data-composer-seat\] button\[aria-busy\]:not\(\[aria-haspopup\]\)'\)/)
   assert.match(CLIENT_SOURCE, /prefers-reduced-motion/)
   assert.match(CLIENT_SOURCE, /requestAnimationFrame\(frame\)/)
 })

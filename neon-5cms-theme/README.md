@@ -60,7 +60,7 @@ Host 半（`index.js`）只导出空 `apply()`：主题完全在浏览器端，H
 | 选择器 | 含义 |
 | --- | --- |
 | `[data-composer-seat]` | 输入区容器（发送按钮的祖先） |
-| `button[aria-busy]` | 容器内的主发送按钮 |
+| `button[aria-busy]:not([aria-haspopup])` | 容器内的主发送按钮（模型选择器也带 `aria-busy`，用 `[aria-haspopup]` 排除） |
 | `button[aria-busy] svg rect` | 其「停止生成」状态（生成中） |
 | `button[aria-busy] svg circle` | 其「发送中」spinner 状态 |
 | `[data-composer-input]` | 输入框 contenteditable（Enter 发送） |
@@ -118,6 +118,8 @@ node neon-5cms-theme/tests/contract.test.js
 - 官方设置页「外观」行只有 浅色 / 深色 / 跟随系统 三项（那是官方插件的静态数组）。本插件不改它，
   所以激活时四项都会显示未选中；切走官方主题只在本次会话生效，长期关闭请用插件开关。
 - 樱花按钮 / 樱花雨依赖上表的语义属性；官方 UI 若改动这些属性，二者会静默失效（主题本身不受影响）。
+- 模型选择器按钮同样带 `aria-busy`，选择器用 `:not([aria-haspopup])` 把它排除；若官方给它去掉
+  `aria-haspopup`，它会被重新当成发送按钮（主题色仍正常，只是该按钮会变成樱花样式）。
 - `dsh-anime-theme` 的原始脚本与备份留在原笔记目录，未纳入本仓库。
 
 ## License
