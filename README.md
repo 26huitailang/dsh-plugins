@@ -2,18 +2,28 @@
 
 [![CI](https://github.com/26huitailang/dsh-plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/26huitailang/dsh-plugins/actions/workflows/ci.yml)
 
-DeepSeek Harness（DSH）插件集合。
+DeepSeek Harness（DSH）插件集合：两个可独立安装的 bundle —— **disk-doctor 磁盘医生**
+（macOS 磁盘空间面板 + AI 清理建议）与 **neon-5cms-theme 霓虹秒速五厘米**
+（第三方主题 + 像素樱花雨）。
+
+[界面预览](#界面预览) · [安装](#安装) · [插件](#插件) · [开发辅助](#开发辅助) · [开源与发布说明](#开源与发布说明)
 
 ## 界面预览
 
-磁盘空间面板：主显示与 macOS「系统设置 → 储存空间」一致（可用空间含可清除空间），
-并同时给出 `df`/`diskutil` 原始口径与可清除空间。
+截图均取自本机实测，只保留主面板区域并做过脱敏：不含侧栏会话列表、标题栏、菜单栏等个人界面信息。
+
+### disk-doctor 磁盘医生
+
+主显示与 macOS「系统设置 → 储存空间」一致（可用空间含可清除空间），同时给出 `df`/`diskutil`
+原始口径与可清除空间：
 
 ![磁盘医生面板](docs/screenshots/panel-overview.png)
 
-「立即刷新」会重新执行一次脚本化采集，并显示 `已刷新 · 采样于 HH:mm:ss` 反馈：
+### neon-5cms-theme 霓虹秒速五厘米
 
-![立即刷新反馈](docs/screenshots/panel-refresh.png)
+深紫罗兰"夜景" + 樱花粉主色；发送消息后飘落像素樱花雨，鼠标划过可以切开花瓣：
+
+![霓虹秒速五厘米主题：樱花雨与鼠标切片](docs/screenshots/theme-neon-5cms.gif)
 
 ## 安装
 
@@ -81,28 +91,11 @@ macOS 磁盘空间面板 + AI 清理建议：
 安装：见上方 [安装](#安装)。Git 规格：`github:26huitailang/dsh-plugins#path:/disk-doctor`。
 契约与设计见 [`disk-doctor/DESIGN.md`](disk-doctor/DESIGN.md)。
 
-#### 测试
-
-```bash
-cd disk-doctor
-node tests/collector.test.js   # 54 项 fixture 单测（离线、确定性）
-```
-
-CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）、上述单测与
-`package.json` 结构校验，见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
-
-#### 界面截图
-
-`docs/screenshots/` 中的截图由本机实测截图裁剪脱敏而来（仅保留面板区域，移除了侧栏会话列表、
-菜单栏等个人界面信息）。
-
 ### neon-5cms-theme（霓虹秒速五厘米主题）
 
 给 DSH Web UI 的「霓虹秒速五厘米 / Neon 5cm/s」第三方主题（内部 id `anime`）：深紫罗兰"夜景"
 底色 + 樱花粉主色 + 淡紫次色，柔光背景、樱花发送按钮；发送消息后飘落像素樱花雨，
 鼠标划过可以切开花瓣。
-
-![霓虹秒速五厘米主题：樱花雨与鼠标切片](docs/screenshots/theme-neon-5cms.gif)
 
 - **不修改任何其他包**：主题通过官方 `theme.register()` / `theme.setTheme()` 扩展点注册，
   与旧版「改写官方 theme bundle」的补丁脚本不同，DSH 升级后无需重跑脚本。
@@ -115,13 +108,19 @@ CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）�
 安装：见上方 [安装](#安装)。Git 规格：`github:26huitailang/dsh-plugins#path:/neon-5cms-theme`。
 契约、开关行为与已知限制见 [`neon-5cms-theme/README.md`](neon-5cms-theme/README.md)。
 
-#### 测试
+## 开发辅助
+
+### 测试
 
 ```bash
-node neon-5cms-theme/tests/contract.test.js   # 14 项离线契约测试（假 Loader / 假 ctx / 假 theme 服务）
+node disk-doctor/tests/collector.test.js        # 54 项 fixture 单测（离线、确定性）
+node neon-5cms-theme/tests/contract.test.js     # 14 项离线契约测试（假 Loader / 假 ctx / 假 theme 服务）
 ```
 
-## 开发辅助
+CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）、上述两个测试与
+双插件 `package.json` 结构校验，见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
+
+### 工具
 
 - `.tools/asar.py`：只读解析 DSH 桌面版 `app.asar`，用于查看安装包内的源码/文档（`ls` / `cat` / `grep`）。
   归档路径默认为 macOS 桌面版位置，可用环境变量 `DSH_ASAR=/path/to/app.asar` 覆盖。
