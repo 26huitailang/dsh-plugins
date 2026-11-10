@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # The plugin's Host half only runs on macOS, but every source file is
+      # plain ESM/JS: syntax checking works on any OS.
+      - name: Syntax check (node --check)
+        run: |
+          set -euo pipefail
+          files=(
+            disk-doctor/index.js
+            disk-doctor/client.js
+            disk-doctor/lib/*.js
+            disk-doctor/tests/*.js
+            .tools/harness-host.mjs
+          )
+          for file in "${files[@]}"; do
+            node --check "$file"
+            echo "syntax ok: $file"
+          done
+
+      # Offline fixture tests: no df/diskutil/osascript is invoked, so this
+      # runs on Linux runners.
+      - name: Unit tests (offline fixtures)
+        run: node disk-doctor/tests/collector.test.js
+
+      - name: Validate package manifest
+        run: |
+          node -e "const fs = require('fs'); const p = JSON.parse(fs.readFileSync('disk-doctor/package.json', 'utf8')); if (p.name !== '@local/disk-doctor') throw new Error('unexpected package name: ' + p.name); if (!p.dsh || !p.dsh.bundle) throw new Error('missing dsh.bundle'); console.log('manifest ok:', p.name, p.version)"
