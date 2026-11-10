@@ -28,6 +28,31 @@ cd disk-doctor
 node tests/collector.test.js   # 54 项 fixture 单测（离线、确定性）
 ```
 
+CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）、上述单测与
+`package.json` 结构校验，见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
+
+### neon-5cms-theme（霓虹秒速五厘米主题）
+
+给 DSH Web UI 的「霓虹秒速五厘米 / Neon 5cm/s」第三方主题（内部 id `anime`）：深紫罗兰"夜景"
+底色 + 樱花粉主色 + 淡紫次色，柔光背景、樱花发送按钮；发送消息后飘落像素樱花雨，
+鼠标划过可以切开花瓣。
+
+- **不修改任何其他包**：主题通过官方 `theme.register()` / `theme.setTheme()` 扩展点注册，
+  与旧版「改写官方 theme bundle」的补丁脚本不同，DSH 升级后无需重跑脚本。
+- **真正的开关**：侧栏「插件」页中该 bundle / 行的开关即启用或关闭。关闭后插件注册的主题随即
+  注销，样式表与樱花雨一并移除，Host 持久化的浅色 / 深色 / 跟随系统偏好重新生效。
+- **稳定 DOM 契约**：樱花按钮与樱花雨使用 `[data-composer-seat] button[aria-busy]`、
+  `[data-composer-input]` 等语义属性定位，不用每次构建都会变化的 CSS Module 哈希类名。
+
+安装：通过 DSH Plugin Manager 以本地目录安装 `neon-5cms-theme/`。
+契约、开关行为与已知限制见 [`neon-5cms-theme/README.md`](neon-5cms-theme/README.md)。
+
+#### 测试
+
+```bash
+node neon-5cms-theme/tests/contract.test.js   # 14 项离线契约测试（假 Loader / 假 ctx / 假 theme 服务）
+```
+
 ## 开发辅助
 
 - `.tools/asar.py`：只读解析 DSH 桌面版 `app.asar`，用于查看安装包内的源码/文档（`ls` / `cat` / `grep`）。
@@ -39,7 +64,7 @@ node tests/collector.test.js   # 54 项 fixture 单测（离线、确定性）
 ## 开源与发布说明
 
 - 许可证：[MIT](LICENSE)。
-- `disk-doctor/package.json` 目前是本地 DSH bundle 的写法（`"private": true`、`@local/` 作用域）。
+- 两个插件的 `package.json` 目前都是本地 DSH bundle 的写法（`"private": true`、`@local/` 作用域）。
   若要发布到 npm，需要改成公开作用域/包名、移除 `private`，并补上 `repository` 字段。
 - `.tools/asar.py` 默认读取 macOS 桌面版 DSH 的 `app.asar`，可用 `DSH_ASAR` 指定其他路径。
 
