@@ -55,6 +55,8 @@ CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）�
 底色 + 樱花粉主色 + 淡紫次色，柔光背景、樱花发送按钮；发送消息后飘落像素樱花雨，
 鼠标划过可以切开花瓣。
 
+![霓虹秒速五厘米主题：樱花雨与鼠标切片](docs/screenshots/theme-neon-5cms.gif)
+
 - **不修改任何其他包**：主题通过官方 `theme.register()` / `theme.setTheme()` 扩展点注册，
   与旧版「改写官方 theme bundle」的补丁脚本不同，DSH 升级后无需重跑脚本。
 - **真正的开关**：侧栏「插件」页中该 bundle / 行的开关即启用或关闭。关闭后插件注册的主题随即
