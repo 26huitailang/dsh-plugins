@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Disk doctor",
+    "description": "Shows macOS disk space, samples it on a schedule without a model, and starts a model inspection for cleanup suggestions on request."
+  }
+}

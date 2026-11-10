@@ -1,0 +1,3 @@
+- insert:
+    - id: disk-doctor
+      name: '@local/disk-doctor'

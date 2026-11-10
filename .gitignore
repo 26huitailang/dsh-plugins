@@ -1,0 +1,12 @@
+# macOS metadata
+.DS_Store
+
+# Python scratch
+__pycache__/
+*.pyc
+
+# Verification artifacts (screenshots recorded during live UI checks)
+.verify/
+
+# Node
+node_modules/
