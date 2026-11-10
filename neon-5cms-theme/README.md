@@ -71,16 +71,15 @@ Host 半（`index.js`）只导出空 `apply()`：主题完全在浏览器端，H
 
 ## 安装
 
-在 DSH 的「插件」页用本地目录安装本仓库的 `neon-5cms-theme/` 目录（bundle patch 自动插入 Loader 行）：
+两种方式（都在 DSH 侧栏「插件」→「添加插件」里操作）：
 
-```bash
-# 或在 profile 目录手动 link（不推荐，推荐用 Plugin Manager）
-# 仓库根目录的 bundle 目录结构：
-#   neon-5cms-theme/{package.json, cordis.patch.yml, index.js, client.js, locale/, icon.svg}
-```
+1. **GitHub 仓库**（无需 npm）：粘贴
+   `github:26huitailang/dsh-plugins#path:/neon-5cms-theme`
+   （完整 URL：`https://github.com/26huitailang/dsh-plugins#path:/neon-5cms-theme`）。
+   `#path:` 不能省：仓库根目录不是插件包，根目录安装会被判定为 `not-a-bundle` 并回滚。
+2. **本地目录**（开发时推荐）：粘贴本目录的绝对路径，安装成 `link:` 依赖，改代码后热更新。
 
-安装后在「插件」页看到「霓虹秒速五厘米 / Neon 5cm/s」卡片，开关即启用 / 关闭。
-热重载（HMR）会随插件文件变化自动重装，无需重启桌面端。
+安装后 bundle 默认启用；「插件」页的 bundle 开关 / 行开关即启用与关闭。
 
 ## 测试
 
@@ -101,7 +100,7 @@ node neon-5cms-theme/tests/contract.test.js
 | 开关 | 无（只能重跑脚本 `--undo`） | 「插件」页开关，持久化到 profile |
 | DSH 升级 | bundle 被重置后需重跑脚本 | 插件随 profile 保留，无需重跑 |
 | 外观设置项 | 往官方 `CUBES` 加第 4 个选项（需打补丁） | 不修改官方设置行（不改其他包是硬约束） |
-| 发送按钮定位 | CSS Module 哈希类名 `.uV2eYG_primary` | `[data-composer-seat] button[aria-busy]` |
+| 发送按钮定位 | CSS Module 哈希类名 `.uV2eYG_primary` | `[data-composer-seat] button[aria-busy]:not([aria-haspopup])` |
 | Host 侧 | 无 | 空 `apply()`，只占 Loader 行 |
 
 ## 配色速览

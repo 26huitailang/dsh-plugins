@@ -15,6 +15,53 @@ DeepSeek Harness（DSH）插件集合。
 
 ![立即刷新反馈](docs/screenshots/panel-refresh.png)
 
+## 安装
+
+两个插件都在 DSH 的「插件」页安装（侧栏 **插件** → **添加插件**），支持三种来源。
+
+### 1. GitHub 仓库（无需发布 npm，推荐试用）
+
+粘贴带子目录的 Git 规格，**必须带 `#path:/<子目录>`**：
+
+| 插件 | 在「添加插件」里粘贴 |
+| --- | --- |
+| 磁盘医生 | `github:26huitailang/dsh-plugins#path:/disk-doctor` |
+| 霓虹秒速五厘米 | `github:26huitailang/dsh-plugins#path:/neon-5cms-theme` |
+
+也可以写成完整 URL：
+`https://github.com/26huitailang/dsh-plugins#path:/neon-5cms-theme`。
+
+> **为什么不能只填仓库地址？** 本仓库是 monorepo，仓库根目录没有 `package.json` / `dsh.bundle`。
+> pnpm 对没有 `package.json` 的仓库会生成一个占位包（`dsh-plugins 0.0.0`），插件管理器读不到
+> bundle 声明，会以 `not-a-bundle` 回滚安装。`#path:` 告诉 pnpm 取仓库里的哪个子目录，
+> 那个子目录才是完整插件包（有自己的 `package.json`、`cordis.patch.yml` 和 `dsh.client`）。
+
+### 2. 本地目录（开发时推荐，改代码后自动热更新）
+
+在「添加插件」里粘贴插件的**绝对路径**，例如：
+
+```text
+/Users/<你>/git-checkout/dsh-plugins/disk-doctor
+/Users/<你>/git-checkout/dsh-plugins/neon-5cms-theme
+```
+
+这样安装成 `link:` 依赖，插件文件随保存热重载，不用重装。
+
+### 3. npm 包（发布后）
+
+两个插件的 `package.json` 目前是本地 bundle 写法（`private: true`、`@local/` 作用域）。
+发布前需要改成公开包名、移除 `private` 并补 `repository`，之后可直接粘贴包名安装。
+
+### 启用 / 关闭 / 卸载
+
+- 安装后 bundle 默认启用；侧栏「插件」页里 bundle 开关和单个插件行开关都可以控制启用。
+- **关闭**只从组合中摘掉（依赖仍保留），**卸载**才会移除依赖；两者都不影响 profile 里其他插件。
+- 具体运行时行为（例如主题关闭后恢复官方主题）见各插件 README。
+
+### 安装源（镜像）说明
+
+「添加插件」里的安装源只影响 **npm 包名**的安装；Git 规格和本地目录不经过 npm registry。
+
 ## 插件
 
 ### disk-doctor（磁盘医生）
@@ -31,7 +78,7 @@ macOS 磁盘空间面板 + AI 清理建议：
   模型只读巡检后给出结构化清理建议；最终回答由 Host 监听会话事件捕获并回显在面板中，可跳转完整会话。
   插件只给建议，绝不自动删除任何文件。
 
-安装：通过 DSH Plugin Manager 以本地目录安装本仓库的 `disk-doctor/` 目录（bundle patch 自动插入 Loader 行）。
+安装：见上方 [安装](#安装)。Git 规格：`github:26huitailang/dsh-plugins#path:/disk-doctor`。
 契约与设计见 [`disk-doctor/DESIGN.md`](disk-doctor/DESIGN.md)。
 
 #### 测试
@@ -65,7 +112,7 @@ CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）�
   `[data-composer-input]` 等语义属性定位（`aria-busy` 也出现在模型选择器上，用 `aria-haspopup` 排除），
   不用每次构建都会变化的 CSS Module 哈希类名。
 
-安装：通过 DSH Plugin Manager 以本地目录安装 `neon-5cms-theme/`。
+安装：见上方 [安装](#安装)。Git 规格：`github:26huitailang/dsh-plugins#path:/neon-5cms-theme`。
 契约、开关行为与已知限制见 [`neon-5cms-theme/README.md`](neon-5cms-theme/README.md)。
 
 #### 测试
