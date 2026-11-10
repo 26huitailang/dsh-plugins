@@ -1,0 +1,3 @@
+- insert:
+    - id: neon-5cms-theme
+      name: '@local/neon-5cms-theme'
