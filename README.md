@@ -1,6 +1,19 @@
 # dsh-plugins
 
+[![CI](https://github.com/26huitailang/dsh-plugins/actions/workflows/ci.yml/badge.svg)](https://github.com/26huitailang/dsh-plugins/actions/workflows/ci.yml)
+
 DeepSeek Harness（DSH）插件集合。
+
+## 界面预览
+
+磁盘空间面板：主显示与 macOS「系统设置 → 储存空间」一致（可用空间含可清除空间），
+并同时给出 `df`/`diskutil` 原始口径与可清除空间。
+
+![磁盘医生面板](docs/screenshots/panel-overview.png)
+
+「立即刷新」会重新执行一次脚本化采集，并显示 `已刷新 · 采样于 HH:mm:ss` 反馈：
+
+![立即刷新反馈](docs/screenshots/panel-refresh.png)
 
 ## 插件
 
@@ -31,6 +44,11 @@ node tests/collector.test.js   # 54 项 fixture 单测（离线、确定性）
 CI（GitHub Actions）在 Node 18/20/22 上执行 `node --check`（全部 JS）、上述单测与
 `package.json` 结构校验，见 [`.github/workflows/ci.yml`](.github/workflows/ci.yml)。
 
+#### 界面截图
+
+`docs/screenshots/` 中的截图由本机实测截图裁剪脱敏而来（仅保留面板区域，移除了侧栏会话列表、
+菜单栏等个人界面信息）。
+
 ### neon-5cms-theme（霓虹秒速五厘米主题）
 
 给 DSH Web UI 的「霓虹秒速五厘米 / Neon 5cm/s」第三方主题（内部 id `anime`）：深紫罗兰"夜景"
@@ -59,7 +77,8 @@ node neon-5cms-theme/tests/contract.test.js   # 14 项离线契约测试（假 L
   归档路径默认为 macOS 桌面版位置，可用环境变量 `DSH_ASAR=/path/to/app.asar` 覆盖。
 - `.tools/harness-host.mjs`：Host 半的 mock-Cordis 集成验证（真实 df/diskutil/JXA 命令 + 路由 + AI 会话跟踪）。
 
-`.verify/`（本机实测截图）已在 `.gitignore` 中忽略，不会进入仓库；如需分享截图请自行确认其中不含个人信息。
+`.verify/`（本机原始实测截图）已在 `.gitignore` 中忽略，不会进入仓库；对外展示使用
+`docs/screenshots/` 中的脱敏裁剪版本。
 
 ## 开源与发布说明
 
